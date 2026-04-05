@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import authRoutes from './routes/authRoutes.js';
 
 const PORT = 3000;
 const MONGO_URI = 'mongodb://localhost:27017/tuktukdb';
@@ -7,6 +8,10 @@ const MONGO_URI = 'mongodb://localhost:27017/tuktukdb';
 const app = express();
 app.use(express.json());
 
+// Routes
+app.use('/api/auth', authRoutes);
+
+// Test route
 app.get('/', (req, res) => {
   res.json({ message: 'Tuk-Tuk API is running!' });
 });
