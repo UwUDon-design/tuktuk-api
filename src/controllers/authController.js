@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 
-const JWT_SECRET = 'supersecretkey123';
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey123';
 
 export const register = async (req, res) => {
   try {
