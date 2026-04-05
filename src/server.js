@@ -5,6 +5,7 @@ import provinceRoutes from './routes/provinceRoutes.js';
 import districtRoutes from './routes/districtRoutes.js';
 import vehicleRoutes from './routes/vehicleRoutes.js';
 import locationRoutes from './routes/locationRoutes.js';
+import driverRoutes from './routes/driverRoutes.js';
 
 const PORT = 3000;
 const MONGO_URI = 'mongodb://localhost:27017/tuktukdb';
@@ -18,6 +19,7 @@ app.use('/api/provinces', provinceRoutes);
 app.use('/api/districts', districtRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/locations', locationRoutes);
+app.use('/api/drivers', driverRoutes);
 
 // Test route
 app.get('/', (req, res) => {
