@@ -7,8 +7,8 @@ import vehicleRoutes from './routes/vehicleRoutes.js';
 import locationRoutes from './routes/locationRoutes.js';
 import driverRoutes from './routes/driverRoutes.js';
 
-const PORT = 3000;
-const MONGO_URI = 'mongodb://localhost:27017/tuktukdb';
+const PORT = process.env.PORT || 3000;
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/tuktukdb';
 
 const app = express();
 app.use(express.json());
