@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import Province from './models/Province.js';
@@ -6,8 +7,9 @@ import Driver from './models/Driver.js';
 import Vehicle from './models/Vehicle.js';
 import Location from './models/Location.js';
 import User from './models/User.js';
+import PoliceStation from './models/PoliceStation.js';
 
-const MONGO_URI = 'mongodb://localhost:27017/tuktukdb';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/tuktukdb';
 
 const provinces = [
   { name: 'Western', code: 'WP' },
@@ -25,7 +27,7 @@ const districtsByProvince = {
   WP: ['Colombo', 'Gampaha', 'Kalutara'],
   CP: ['Kandy', 'Matale', 'Nuwara Eliya'],
   SP: ['Galle', 'Matara', 'Hambantota'],
-  NP: ['Jaffna', 'Kilinochchi', 'Mannar'],
+  NP: ['Jaffna', 'Kilinochchi', 'Mannar', 'Vavuniya', 'Mullaitivu'],
   EP: ['Batticaloa', 'Ampara', 'Trincomalee'],
   NWP: ['Kurunegala', 'Puttalam'],
   NCP: ['Anuradhapura', 'Polonnaruwa'],
@@ -52,6 +54,7 @@ const seed = async () => {
   await Vehicle.deleteMany();
   await Location.deleteMany();
   await User.deleteMany();
+  await PoliceStation.deleteMany();
   console.log('Cleared existing data');
 
   // Seed provinces
@@ -96,6 +99,53 @@ const seed = async () => {
     });
   }
   console.log('Police users seeded');
+
+  // Seed police stations (25 stations across all districts)
+  const stationData = [
+    { name: 'Colombo Fort Police Station',     code: 'PS_COL_001', address: 'Fort, Colombo 01',          contactNumber: '0112321111', districtName: 'Colombo' },
+    { name: 'Nugegoda Police Station',         code: 'PS_COL_002', address: 'Nugegoda, Colombo',          contactNumber: '0112852222', districtName: 'Colombo' },
+    { name: 'Gampaha Police Station',          code: 'PS_GAM_001', address: 'Gampaha Town',               contactNumber: '0332222333', districtName: 'Gampaha' },
+    { name: 'Negombo Police Station',          code: 'PS_GAM_002', address: 'Negombo, Gampaha',           contactNumber: '0312223344', districtName: 'Gampaha' },
+    { name: 'Kalutara Police Station',         code: 'PS_KAL_001', address: 'Kalutara Town',              contactNumber: '0342222445', districtName: 'Kalutara' },
+    { name: 'Kandy Central Police Station',    code: 'PS_KAN_001', address: 'Kandy City Centre',          contactNumber: '0812224556', districtName: 'Kandy' },
+    { name: 'Peradeniya Police Station',       code: 'PS_KAN_002', address: 'Peradeniya, Kandy',          contactNumber: '0812225667', districtName: 'Kandy' },
+    { name: 'Matale Police Station',           code: 'PS_MAT_001', address: 'Matale Town',                contactNumber: '0662226778', districtName: 'Matale' },
+    { name: 'Nuwara Eliya Police Station',     code: 'PS_NUW_001', address: 'Nuwara Eliya Town',          contactNumber: '0522227889', districtName: 'Nuwara Eliya' },
+    { name: 'Galle Police Station',            code: 'PS_GAL_001', address: 'Galle Fort',                 contactNumber: '0912228990', districtName: 'Galle' },
+    { name: 'Matara Police Station',           code: 'PS_MTA_001', address: 'Matara Town',                contactNumber: '0412229001', districtName: 'Matara' },
+    { name: 'Hambantota Police Station',       code: 'PS_HAM_001', address: 'Hambantota Town',            contactNumber: '0472220112', districtName: 'Hambantota' },
+    { name: 'Jaffna Police Station',           code: 'PS_JAF_001', address: 'Jaffna Town',                contactNumber: '0212221223', districtName: 'Jaffna' },
+    { name: 'Kilinochchi Police Station',      code: 'PS_KIL_001', address: 'Kilinochchi Town',           contactNumber: '0212222334', districtName: 'Kilinochchi' },
+    { name: 'Mannar Police Station',           code: 'PS_MAN_001', address: 'Mannar Town',                contactNumber: '0232223445', districtName: 'Mannar' },
+    { name: 'Vavuniya Police Station',         code: 'PS_VAV_001', address: 'Vavuniya Town',              contactNumber: '0242224556', districtName: 'Vavuniya' },
+    { name: 'Mullaitivu Police Station',       code: 'PS_MUL_001', address: 'Mullaitivu Town',            contactNumber: '0212225667', districtName: 'Mullaitivu' },
+    { name: 'Batticaloa Police Station',       code: 'PS_BAT_001', address: 'Batticaloa Town',            contactNumber: '0652226778', districtName: 'Batticaloa' },
+    { name: 'Ampara Police Station',           code: 'PS_AMP_001', address: 'Ampara Town',                contactNumber: '0632227889', districtName: 'Ampara' },
+    { name: 'Trincomalee Police Station',      code: 'PS_TRI_001', address: 'Trincomalee Town',           contactNumber: '0262228990', districtName: 'Trincomalee' },
+    { name: 'Kurunegala Police Station',       code: 'PS_KUR_001', address: 'Kurunegala Town',            contactNumber: '0372229001', districtName: 'Kurunegala' },
+    { name: 'Puttalam Police Station',         code: 'PS_PUT_001', address: 'Puttalam Town',              contactNumber: '0322220112', districtName: 'Puttalam' },
+    { name: 'Anuradhapura Police Station',     code: 'PS_ANU_001', address: 'Anuradhapura Town',          contactNumber: '0252221223', districtName: 'Anuradhapura' },
+    { name: 'Polonnaruwa Police Station',      code: 'PS_POL_001', address: 'Polonnaruwa Town',           contactNumber: '0272222334', districtName: 'Polonnaruwa' },
+    { name: 'Badulla Police Station',          code: 'PS_BAD_001', address: 'Badulla Town',               contactNumber: '0552223445', districtName: 'Badulla' },
+    { name: 'Monaragala Police Station',       code: 'PS_MON_001', address: 'Monaragala Town',            contactNumber: '0552224556', districtName: 'Monaragala' },
+    { name: 'Ratnapura Police Station',        code: 'PS_RAT_001', address: 'Ratnapura Town',             contactNumber: '0452225667', districtName: 'Ratnapura' },
+    { name: 'Kegalle Police Station',          code: 'PS_KEG_001', address: 'Kegalle Town',               contactNumber: '0352226778', districtName: 'Kegalle' }
+  ];
+
+  const stationDocs = stationData.map(s => {
+    const district = createdDistricts.find(d => d.name === s.districtName);
+    const province = createdProvinces.find(p => p._id.equals(district.province));
+    return {
+      name: s.name,
+      code: s.code,
+      address: s.address,
+      contactNumber: s.contactNumber,
+      district: district._id,
+      province: province._id
+    };
+  });
+  await PoliceStation.insertMany(stationDocs);
+  console.log('Police stations seeded');
 
   // Seed drivers
   const driverDocs = [];
