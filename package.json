@@ -17,9 +17,7 @@
     "express-rate-limit": "^8.4.0",
     "express-validator": "^7.3.2",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.4.1",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "mongoose": "^9.4.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
