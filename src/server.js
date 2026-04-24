@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import mongoose from 'mongoose';
+import rateLimit from 'express-rate-limit';
 import swaggerDocument from './swagger.js';
 import authRoutes from './routes/authRoutes.js';
 import provinceRoutes from './routes/provinceRoutes.js';
@@ -15,6 +16,21 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(express.json());
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { message: 'Too many requests, please try again after 15 minutes' }
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { message: 'Too many login attempts, please try again after 15 minutes' }
+});
+
+app.use('/api/', limiter);
+app.use('/api/auth', authLimiter);
 
 app.get('/api-docs.json', (req, res) => res.json(swaggerDocument));
 
