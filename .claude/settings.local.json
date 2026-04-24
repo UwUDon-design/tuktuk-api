@@ -10,7 +10,9 @@
       "Bash(node -e \"process.stdin.resume\\(\\);let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>{const r=JSON.parse\\(d\\);console.log\\('role:',r.user?.role,'token present:',!!r.token\\)}\\)\")",
       "Bash(curl -s -X POST http://localhost:3000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"admin@police.lk\",\"password\":\"admin123\"}')",
       "Bash(pkill -f \"node src/server.js\")",
-      "Bash(curl -s http://localhost:3000/)"
+      "Bash(curl -s http://localhost:3000/)",
+      "Bash(curl -s https://tuktuk-l4b6q781i-uwudon-designs-projects.vercel.app/)",
+      "WebFetch(domain:tuktuk-l4b6q781i-uwudon-designs-projects.vercel.app)"
     ]
   }
 }

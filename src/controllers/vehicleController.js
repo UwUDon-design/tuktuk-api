@@ -3,16 +3,25 @@ import Driver from '../models/Driver.js';
 
 export const getAllVehicles = async (req, res) => {
   try {
-    const { province, district } = req.query;
+    const { province, district, color, page = 1, limit = 20, sort = '-createdAt' } = req.query;
     const filter = {};
     if (province) filter.province = province;
     if (district) filter.district = district;
+    if (color) filter.color = color;
 
-    const vehicles = await Vehicle.find(filter)
-      .populate('driver', 'name licenseNumber phone')
-      .populate('district', 'name')
-      .populate('province', 'name');
-    res.json(vehicles);
+    const skip = (Number(page) - 1) * Number(limit);
+    const [vehicles, total] = await Promise.all([
+      Vehicle.find(filter)
+        .populate('driver', 'name licenseNumber phone')
+        .populate('district', 'name')
+        .populate('province', 'name')
+        .sort(sort)
+        .skip(skip)
+        .limit(Number(limit)),
+      Vehicle.countDocuments(filter)
+    ]);
+
+    res.json({ data: vehicles, total, page: Number(page), limit: Number(limit), pages: Math.ceil(total / Number(limit)) });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
