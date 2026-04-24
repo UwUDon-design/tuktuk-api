@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import rateLimit from 'express-rate-limit';
 import swaggerDocument from './swagger.js';
+import errorHandler from './middleware/errorHandler.js';
 import authRoutes from './routes/authRoutes.js';
 import provinceRoutes from './routes/provinceRoutes.js';
 import districtRoutes from './routes/districtRoutes.js';
@@ -69,6 +70,8 @@ app.use('/api/stations', policeStationRoutes);
 app.get('/', (req, res) => {
   res.json({ message: 'Tuk-Tuk API is running!' });
 });
+
+app.use(errorHandler);
 
 // Top-level await ensures MongoDB is connected before any request is handled.
 // Works because this project uses ES modules ("type": "module").
