@@ -15,7 +15,7 @@ export const protect = (req, res, next) => {
     const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
     next();
-  } catch (err) {
+  } catch (_err) {
     return res.status(401).json({ message: 'Not authorized, invalid token' });
   }
 };
