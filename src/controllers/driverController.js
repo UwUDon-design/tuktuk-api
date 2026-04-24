@@ -2,13 +2,21 @@ import Driver from '../models/Driver.js';
 
 export const getAllDrivers = async (req, res) => {
   try {
-    const { district } = req.query;
+    const { district, page = 1, limit = 20, sort = '-createdAt' } = req.query;
     const filter = {};
     if (district) filter.district = district;
 
-    const drivers = await Driver.find(filter)
-      .populate('district', 'name');
-    res.json(drivers);
+    const skip = (Number(page) - 1) * Number(limit);
+    const [drivers, total] = await Promise.all([
+      Driver.find(filter)
+        .populate('district', 'name')
+        .sort(sort)
+        .skip(skip)
+        .limit(Number(limit)),
+      Driver.countDocuments(filter)
+    ]);
+
+    res.json({ data: drivers, total, page: Number(page), limit: Number(limit), pages: Math.ceil(total / Number(limit)) });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }

@@ -2,15 +2,23 @@ import PoliceStation from '../models/PoliceStation.js';
 
 export const getAllStations = async (req, res) => {
   try {
+    const { district, province, page = 1, limit = 20, sort = 'name' } = req.query;
     const filter = { isActive: true };
-    if (req.query.district) filter.district = req.query.district;
-    if (req.query.province) filter.province = req.query.province;
+    if (district) filter.district = district;
+    if (province) filter.province = province;
 
-    const stations = await PoliceStation.find(filter)
-      .populate('district', 'name code')
-      .populate('province', 'name code');
+    const skip = (Number(page) - 1) * Number(limit);
+    const [stations, total] = await Promise.all([
+      PoliceStation.find(filter)
+        .populate('district', 'name code')
+        .populate('province', 'name code')
+        .sort(sort)
+        .skip(skip)
+        .limit(Number(limit)),
+      PoliceStation.countDocuments(filter)
+    ]);
 
-    res.json(stations);
+    res.json({ data: stations, total, page: Number(page), limit: Number(limit), pages: Math.ceil(total / Number(limit)) });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }

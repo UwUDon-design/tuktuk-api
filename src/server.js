@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import mongoose from 'mongoose';
+import swaggerDocument from './swagger.js';
 import authRoutes from './routes/authRoutes.js';
 import provinceRoutes from './routes/provinceRoutes.js';
 import districtRoutes from './routes/districtRoutes.js';
@@ -14,6 +15,32 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(express.json());
+
+app.get('/api-docs.json', (req, res) => res.json(swaggerDocument));
+
+app.get('/api-docs', (req, res) => {
+  res.send(`<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tuk-Tuk API Docs</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css">
+  </head>
+  <body>
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
+    <script>
+      SwaggerUIBundle({
+        url: '/api-docs.json',
+        dom_id: '#swagger-ui',
+        presets: [SwaggerUIBundle.presets.apis, SwaggerUIBundle.SwaggerUIStandalonePreset],
+        layout: 'BaseLayout'
+      });
+    </script>
+  </body>
+</html>`);
+});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/provinces', provinceRoutes);

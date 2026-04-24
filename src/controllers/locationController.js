@@ -39,7 +39,7 @@ export const getLastLocation = async (req, res) => {
 
 export const getLocationHistory = async (req, res) => {
   try {
-    const { from, to } = req.query;
+    const { from, to, page = 1, limit = 50 } = req.query;
     const filter = { vehicle: req.params.vehicleId };
 
     if (from || to) {
@@ -48,11 +48,17 @@ export const getLocationHistory = async (req, res) => {
       if (to) filter.timestamp.$lte = new Date(to);
     }
 
-    const locations = await Location.find(filter)
-      .sort({ timestamp: -1 })
-      .populate('vehicle', 'registrationNumber');
+    const skip = (Number(page) - 1) * Number(limit);
+    const [locations, total] = await Promise.all([
+      Location.find(filter)
+        .sort({ timestamp: -1 })
+        .skip(skip)
+        .limit(Number(limit))
+        .populate('vehicle', 'registrationNumber'),
+      Location.countDocuments(filter)
+    ]);
 
-    res.json(locations);
+    res.json({ data: locations, total, page: Number(page), limit: Number(limit), pages: Math.ceil(total / Number(limit)) });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
