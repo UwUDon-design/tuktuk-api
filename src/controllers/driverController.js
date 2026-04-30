@@ -2,8 +2,9 @@ import Driver from '../models/Driver.js';
 
 export const getAllDrivers = async (req, res) => {
   try {
-    const { district, page = 1, limit = 20, sort = '-createdAt' } = req.query;
+    const { name, district, page = 1, limit = 20, sort = '-createdAt' } = req.query;
     const filter = {};
+    if (name) filter.name = { $regex: name, $options: 'i' };
     if (district) filter.district = district;
 
     const skip = (Number(page) - 1) * Number(limit);
