@@ -35,19 +35,43 @@ const districtsByProvince = {
   SGP: ['Ratnapura', 'Kegalle']
 };
 
+const firstNames = [
+  'Kasun', 'Nuwan', 'Ruwan', 'Thilan', 'Chaminda', 'Saman', 'Pradeep', 'Lasith',
+  'Mahesh', 'Roshan', 'Dilshan', 'Asanka', 'Nimal', 'Suresh', 'Amal', 'Tharaka',
+  'Charith', 'Prabath', 'Gayan', 'Sanjeewa', 'Ranga', 'Harsha', 'Chatura', 'Damith',
+  'Prasad', 'Dimuth', 'Kavinda', 'Ishan', 'Sachith', 'Dinesh', 'Chathura', 'Lasantha',
+  'Bandula', 'Udara', 'Janaka', 'Thisara', 'Amila', 'Vimukthi', 'Nalin', 'Sandun'
+];
+
+const lastNames = [
+  'Perera', 'Silva', 'Fernando', 'De Silva', 'Jayawardena', 'Gunawardena',
+  'Wickramasinghe', 'Senanayake', 'Dissanayake', 'Bandara', 'Rajapaksa',
+  'Jayasuriya', 'Karunaratne', 'Amarasinghe', 'Pathirana', 'Ranasinghe',
+  'Samaraweera', 'Hettige', 'Weerasinghe', 'Mendis', 'Liyanage', 'Gamage',
+  'Kumarasinghe', 'Siriwardena', 'Gunathilake', 'Rathnayake', 'Jayarathna',
+  'Abeywickrama', 'Wijesinghe', 'Thilakasiri', 'Weeraratne', 'Balasuriya',
+  'Munasinghe', 'Abeyrathne', 'Kodikara', 'Ratnayake', 'Alwis', 'Dharmarathne'
+];
+
 const colors = ['Yellow', 'Blue', 'Red', 'Green', 'White', 'Black'];
 
 const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
 const getRandomFloat = (min, max) => parseFloat((Math.random() * (max - min) + min).toFixed(6));
-
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const getRandomName = () => `${getRandomItem(firstNames)} ${getRandomItem(lastNames)}`;
+
+// Sri Lankan NIC: YYDDDSSSSV (2+3+4 digits + V = 10 chars)
+const generateNIC = (i) => {
+  const yr = String(70 + Math.floor(i / 266)).padStart(2, '0');
+  const day = String(1 + (i % 266)).padStart(3, '0');
+  const seq = String(i).padStart(4, '0');
+  return `${yr}${day}${seq}V`;
+};
 
 const seed = async () => {
   await mongoose.connect(MONGO_URI);
   console.log('Connected to MongoDB');
 
-  // Clear existing data
   await Province.deleteMany();
   await District.deleteMany();
   await Driver.deleteMany();
@@ -57,11 +81,9 @@ const seed = async () => {
   await PoliceStation.deleteMany();
   console.log('Cleared existing data');
 
-  // Seed provinces
   const createdProvinces = await Province.insertMany(provinces);
   console.log('Provinces seeded');
 
-  // Seed districts
   const districtDocs = [];
   for (const province of createdProvinces) {
     const names = districtsByProvince[province.code];
@@ -76,22 +98,28 @@ const seed = async () => {
   const createdDistricts = await District.insertMany(districtDocs);
   console.log('Districts seeded');
 
-  // Seed admin user
-  const hashedPassword = await bcrypt.hash('admin123', 10);
+  const hashedPassword = await bcrypt.hash('Lanka#2024', 10);
   await User.create({
-    name: 'Admin User',
+    name: 'Roshan Perera',
     email: 'admin@police.lk',
     password: hashedPassword,
     role: 'admin'
   });
   console.log('Admin user seeded');
 
-  // Seed police users
-  for (let i = 1; i <= 20; i++) {
+  const officerNames = [
+    'Dimuth Karunaratne', 'Kasun Rajapaksa', 'Nuwan Jayawardena', 'Thilan Samaraweera',
+    'Chaminda Weerasinghe', 'Saman Pathirana', 'Pradeep Dissanayake', 'Lasith Perera',
+    'Mahesh Gunathilake', 'Roshan Bandara', 'Dilshan Fernando', 'Asanka De Silva',
+    'Nimal Liyanage', 'Suresh Gamage', 'Amal Ranasinghe', 'Tharaka Senanayake',
+    'Charith Gunawardena', 'Prabath Wickramasinghe', 'Gayan Mendis', 'Sanjeewa Silva'
+  ];
+
+  for (let i = 0; i < 20; i++) {
     const district = getRandomItem(createdDistricts);
     await User.create({
-      name: `Officer ${i}`,
-      email: `officer${i}@police.lk`,
+      name: officerNames[i],
+      email: `officer${i + 1}@police.lk`,
       password: hashedPassword,
       role: 'police',
       district: district.name,
@@ -100,7 +128,6 @@ const seed = async () => {
   }
   console.log('Police users seeded');
 
-  // Seed police stations (25 stations across all districts)
   const stationData = [
     { name: 'Colombo Fort Police Station',     code: 'PS_COL_001', address: 'Fort, Colombo 01',          contactNumber: '0112321111', districtName: 'Colombo' },
     { name: 'Nugegoda Police Station',         code: 'PS_COL_002', address: 'Nugegoda, Colombo',          contactNumber: '0112852222', districtName: 'Colombo' },
@@ -147,45 +174,45 @@ const seed = async () => {
   await PoliceStation.insertMany(stationDocs);
   console.log('Police stations seeded');
 
-  // Seed drivers
+  const regPrefixes = ['WP', 'CP', 'SP', 'EP', 'NP', 'NWP', 'NCP', 'UP', 'SGP'];
+  const regLetters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+
   const driverDocs = [];
-  for (let i = 1; i <= 200; i++) {
+  for (let i = 0; i < 200; i++) {
     const district = getRandomItem(createdDistricts);
     driverDocs.push({
-      name: `Driver ${i}`,
-      licenseNumber: `LIC${String(i).padStart(6, '0')}`,
+      name: getRandomName(),
+      licenseNumber: `B${4000000 + i * 13}`,
       phone: `07${getRandomInt(10000000, 99999999)}`,
-      nationalId: `NID${String(i).padStart(9, '0')}`,
+      nationalId: generateNIC(i),
       district: district._id
     });
   }
   const createdDrivers = await Driver.insertMany(driverDocs);
   console.log('Drivers seeded');
 
-  // Seed vehicles
   const vehicleDocs = [];
-  for (let i = 1; i <= 200; i++) {
-    const driver = createdDrivers[i - 1];
+  for (let i = 0; i < 200; i++) {
+    const driver = createdDrivers[i];
     const district = getRandomItem(createdDistricts);
     const province = createdProvinces.find(p => p._id.equals(district.province));
     vehicleDocs.push({
-      registrationNumber: `TK${String(i).padStart(4, '0')}`,
+      registrationNumber: `${regPrefixes[i % 9]}-${regLetters[Math.floor(i / 9) % regLetters.length]}-${String(1001 + Math.floor(i / (9 * regLetters.length))).padStart(4, '0')}`,
       driver: driver._id,
       district: district._id,
       province: province._id,
       color: getRandomItem(colors),
       year: getRandomInt(2010, 2023),
-      deviceId: `DEV${String(i).padStart(6, '0')}`
+      deviceId: `GPS${String(100001 + i * 3)}`
     });
   }
   const createdVehicles = await Vehicle.insertMany(vehicleDocs);
   console.log('Vehicles seeded');
 
-  // Seed location history - 1 week of data
   console.log('Seeding location history, this may take a moment...');
   const now = new Date();
   const oneWeekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
-  const pingInterval = 15 * 60 * 1000; // every 15 minutes
+  const pingInterval = 15 * 60 * 1000;
 
   const locationDocs = [];
   for (const vehicle of createdVehicles) {
@@ -193,8 +220,8 @@ const seed = async () => {
     while (currentTime <= now) {
       locationDocs.push({
         vehicle: vehicle._id,
-        latitude: getRandomFloat(5.9, 9.8),   // Sri Lanka latitude range
-        longitude: getRandomFloat(79.6, 81.9), // Sri Lanka longitude range
+        latitude: getRandomFloat(5.9, 9.8),
+        longitude: getRandomFloat(79.6, 81.9),
         speed: getRandomInt(0, 60),
         timestamp: new Date(currentTime)
       });
@@ -202,7 +229,6 @@ const seed = async () => {
     }
   }
 
-  // Insert in batches to avoid memory issues
   const batchSize = 1000;
   for (let i = 0; i < locationDocs.length; i += batchSize) {
     await Location.insertMany(locationDocs.slice(i, i + batchSize));

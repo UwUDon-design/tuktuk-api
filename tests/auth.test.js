@@ -50,7 +50,7 @@ describe('POST /api/auth/login', () => {
   it('returns 200 and a token with valid admin credentials', async () => {
     const res = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'admin@police.lk', password: 'admin123' });
+      .send({ email: 'admin@police.lk', password: 'Lanka#2024' });
     expect(res.status).toBe(200);
     expect(res.body.token).toBeDefined();
   });
@@ -72,7 +72,7 @@ describe('Protected routes', () => {
   it('returns 200 with a valid token', async () => {
     const loginRes = await request(app)
       .post('/api/auth/login')
-      .send({ email: 'admin@police.lk', password: 'admin123' });
+      .send({ email: 'admin@police.lk', password: 'Lanka#2024' });
     const token = loginRes.body.token;
 
     const res = await request(app)
