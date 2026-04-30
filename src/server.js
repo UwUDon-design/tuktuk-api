@@ -71,6 +71,15 @@ app.get('/', (req, res) => {
   res.json({ message: 'Tuk-Tuk API is running!' });
 });
 
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    uptime: Math.floor(process.uptime()),
+    db: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.use(errorHandler);
 
 // Top-level await ensures MongoDB is connected before any request is handled.
