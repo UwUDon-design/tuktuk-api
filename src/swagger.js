@@ -158,7 +158,7 @@ const swaggerDocument = {
                 required: ['email', 'password'],
                 properties: {
                   email: { type: 'string', format: 'email', example: 'admin@police.lk' },
-                  password: { type: 'string', example: 'admin123' }
+                  password: { type: 'string', example: 'Lanka#2024' }
                 }
               }
             }
