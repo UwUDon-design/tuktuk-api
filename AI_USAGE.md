@@ -16,3 +16,12 @@ AI code generation was used as an assistant during the development of this proje
 - Writing the Jest test suite
 
 All AI-generated code was reviewed, understood, and tested by the developer before being committed. The project requirements, architecture decisions, and final implementation were directed and verified by the developer throughout.
+
+---
+
+## Evidence of AI Usage
+
+Full evidence is provided in the [`ai-evidence/`](ai-evidence/) folder:
+
+- [`prompts-log.md`](ai-evidence/prompts-log.md) — log of prompts and requests made to the AI during development
+- [`context-fed-to-ai.md`](ai-evidence/context-fed-to-ai.md) — the context document provided to the AI to brief it on the project
