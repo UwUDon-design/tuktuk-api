@@ -1,7 +1,7 @@
 # Project Context — Tuk-Tuk Tracking API
 
-## Who I Am
-I'm a student at NIBM completing coursework NB6007CEM (Web API Development) for BSc (Hons) Computing (Coventry University). This is a graded assignment, not a real production system.
+## About
+Student project for NB6007CEM (Web API Development) at NIBM / Coventry University. Graded assignment, not a real production system.
 
 ## What This Project Is
 A RESTful API for a Real-Time Tuk-Tuk Tracking & Movement Logging System for Sri Lanka Police. No frontend. Built with Node.js + Express (ES Modules), MongoDB + Mongoose, JWT auth. Deployed on Vercel (serverless) with MongoDB Atlas.
