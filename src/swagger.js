@@ -116,6 +116,31 @@ const swaggerDocument = {
   },
   security: [{ bearerAuth: [] }],
   paths: {
+    '/api/health': {
+      get: {
+        tags: ['General'],
+        summary: 'Health check',
+        security: [],
+        responses: {
+          200: {
+            description: 'API is running',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: { type: 'string', example: 'ok' },
+                    uptime: { type: 'number', example: 120 },
+                    db: { type: 'string', example: 'connected' },
+                    timestamp: { type: 'string', format: 'date-time' }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     '/api/auth/register': {
       post: {
         tags: ['Auth'],
