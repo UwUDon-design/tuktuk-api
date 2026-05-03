@@ -1,46 +1,46 @@
 # AI Prompts Log
 
-Prompts and requests made to Claude Code during development, roughly in order.
+Prompts made to Claude Code during development, roughly in order.
 
 ---
 
 ## Initial Setup
 
-> "can u set up a basic express server with es modules and connect it to mongodb"
+> "can u set up a basic express server with es modules nd connect it to mongodb"
 
-> "create the mongoose models for this — User, Province, District, Driver, Vehicle and Location, its for a tuktuk tracking system for sri lanka police"
+> "create the mongoose models for this tuk tuk tracking thing for sri lanka police, need User Province District Driver Vehicle and Location"
 
 ---
 
 ## Authentication
 
-> "add jwt auth — register and login, and a middleware that checks the token, also need role based access for admin and police"
+> "add jwt auth, register and login endpoints nd a middleware that checks the token, also need role based stuff for admin and police"
 
 ---
 
 ## Routes and Controllers
 
-> "add crud routes and controllers for drivers and vehicles, police can only read, admin can do everything"
+> "add crud routes and controllers for drivers and vehicles, police can only read, admin can do everything like create update delete nd stuff"
 
-> "do the same for provinces and districts, anyone can read but only admin creates them"
+> "do the same for provinces and districts, anyone can read but only admin can create them"
 
-> "add the location stuff — any device can post a gps ping but only police and admin can see the history and active vehicles"
+> "add the location stuff, any device can post a gps ping but only police nd admin can see the history and active vehicles and all"
 
-> "add a police station model and full crud for it, needs name code address contactnumber district and province"
+> "add a police station model with name code address contactnumber district nd province and do full crud for it"
 
 ---
 
 ## Validation
 
-> "add input validation to all the post routes using express-validator, check email format, password length, phone number, lat long ranges and mongodb ids in params"
+> "add validation to all the post routes using express-validator, check email, password length, phone number, lat long ranges nd mongodb ids in the params nd all"
 
 ---
 
 ## Deployment
 
-> "how do i deploy this to vercel, it needs to work with mongodb atlas"
+> "how do i deploy this to vercel, needs to work with mongodb atlas"
 
-> "the swagger ui is completely blank on vercel, it works fine locally whats wrong"
+> "the swagger ui is just blank on vercel, works fine locally tho whats the issue"
 
 > "the api is giving 500 errors after deployment, mongodb isnt connecting"
 
@@ -48,13 +48,13 @@ Prompts and requests made to Claude Code during development, roughly in order.
 
 ## Documentation
 
-> "write the full swagger spec for all the endpoints as a plain js object, dont use swagger-jsdoc"
+> "write the full swagger spec for all the endpoints as a plain js object, dont use swagger-jsdoc or anything like that"
 
 ---
 
 ## Pagination and Filtering
 
-> "add pagination to vehicles, drivers, location history and stations — page limit and sort params, return total and pages in the response"
+> "add pagination to vehicles, drivers, location history and stations — page limit sort params nd return total and pages in the response"
 
 > "add filtering to vehicles by province district and color"
 
@@ -62,50 +62,50 @@ Prompts and requests made to Claude Code during development, roughly in order.
 
 ## Rate Limiting
 
-> "add rate limiting, 100 requests per 15 min for the api and 10 per 15 min for auth"
+> "add rate limiting, 100 requests per 15 min for the api nd like 10 per 15 min for auth so ppl cant brute force it"
 
 ---
 
 ## Error Handling
 
-> "add a centralised error handler middleware and put it last in server.js"
+> "add a centralised error handler and put it last in server.js"
 
 ---
 
 ## Seed Data
 
-> "write a seed script, need 9 provinces 25 districts 1 admin 20 police officers 200 drivers 200 vehicles and 7 days of 15 min gps pings for every vehicle"
+> "write a seed script, need 9 provinces 25 districts 1 admin 20 police officers 200 drivers 200 vehicles nd like 7 days of 15 min gps pings for every vehicle"
 
-> "the seed data looks too fake, update the names to real sri lankan names and fix the nic and license number format"
+> "the seed data is way too obvious like Driver 1 Driver 2 and stuff, update the names to actual sri lankan names nd fix the nic and license number format too"
 
 ---
 
 ## Testing
 
-> "write jest tests with supertest for the auth endpoints — validation, login working, login failing, and protected route with and without token"
+> "write jest tests with supertest for the auth stuff — validation errors, login working nd failing, nd protected route with and without a token"
 
 ---
 
 ## Git Branching
 
-> "how do we set up branching properly like a professional project"
+> "how do we set up branching properly, lecturer wants it to look professional u know"
 
 ---
 
 ## CI/CD
 
-> "how do cicd pipelines work and can we add that"
+> "how do cicd pipelines work and can we add that into this"
 
-> "add github actions to run lint and tests on every push and auto deploy to vercel on main"
+> "add github actions to run the lint and tests on every push nd auto deploy to vercel when we push to main"
 
 ---
 
 ## Debugging
 
-> "eslint is showing 26 errors help"
+> "eslint is showing like 26 errors help"
 
-> "the jest test for wrong password is failing it expects 401 but gets 400"
+> "the jest test for wrong password is failing, it expects 401 but gets 400 whats wrong"
 
-> "jest keeps hanging after the tests finish and wont exit"
+> "jest keeps hanging after tests finish and wont exit"
 
-> "the swagger ui is just blank on vercel why"
+> "the swagger ui is blank on vercel why is that"
