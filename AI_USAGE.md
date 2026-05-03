@@ -15,7 +15,7 @@ AI code generation was used as an assistant during the development of this proje
 - Debugging deployment issues on Vercel
 - Writing the Jest test suite
 
-All AI-generated code was reviewed, understood, and tested by the developer before being committed. The project requirements, architecture decisions, and final implementation were directed and verified by the developer throughout.
+All generated code was reviewed and tested before being committed.
 
 ---
 
