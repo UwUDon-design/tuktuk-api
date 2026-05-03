@@ -13,13 +13,16 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: 'Email already registered' });
     }
 
+    const allowedRoles = ['police', 'operator'];
+    const assignedRole = allowedRoles.includes(role) ? role : 'police';
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      role,
+      role: assignedRole,
       station,
       province,
       district
